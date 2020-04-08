@@ -1,8 +1,10 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
 import Navbar from '../components/Navbar'
 import CartButton from '../components/CartButton'
 import List from '../components/List'
+import { getTypes, getVouchers } from '../actions/productActions'
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -15,8 +17,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Home = () => {
+const Home = (props) => {
     const classes = useStyles()
+    
+    props.getTypes()
+    props.getVouchers()
 
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -29,4 +34,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default connect(null, { getTypes, getVouchers })(Home)

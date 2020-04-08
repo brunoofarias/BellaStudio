@@ -1,16 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Fab from '@material-ui/core/Fab'
 import CartIcon from '@material-ui/icons/ShoppingCartOutlined'
 import clsx from 'clsx'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
+import Badge from '@material-ui/core/Badge'
 import Divider from '@material-ui/core/Divider'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import InteresseModal from './InteresseModal'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,54 +21,67 @@ const useStyles = makeStyles((theme) => ({
         '& > *': {
             margin: theme.spacing(1),
         }
+    },
+    list: {
+        width: 300
     }
 }))
 
-
-
-const CartButton = () => {
+const CartButton = (props) => {
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
+    const { cart } = props
 
     const list = (anchor) => (
         <div
-            className={clsx(classes.list, {
-                [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-            })}
+            className={clsx(classes.list)}
             role="presentation"
-            onClick={() => setOpen(false)}
             onKeyDown={() => setOpen(false)}
         >
-            <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-                </ListItem>
-            ))}
-            </List>
-            <Divider />
-            <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-                </ListItem>
-            ))}
+            <List style={{ width: '100%' }}>
+                {cart.map((item, index) => (
+                    <>
+                        <ListItem key={item.id} style={{ width: '100%' }}>
+                            <div style={{ width: '100%' }}>   
+                                <Typography variant="h6">
+                                    {item.name}
+                                </Typography>
+                                <Typography variant="subtitle2">
+                                    {item.desc}
+                                </Typography>
+                                <br/>
+                                <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+                                    <Button size="small" style={{ marginRight: 10 }}>+</Button>
+                                    {item.quantity}
+                                    <Button size="small" style={{ marginLeft: 10 }}>-</Button>
+                                </div>
+                            </div>
+                        </ListItem>
+                        <Divider />
+                    </>
+                ))}
             </List>
         </div>
     )
 
     return (
         <div className={classes.root}>
-            <Fab color="primary" aria-label="add" onClick={() => setOpen(true)}>
-                <CartIcon />
+            <Fab color="primary" aria-label="add" variant="extended" onClick={() => setOpen(true)}>
+                {/* <Badge badgeContent={cart.length} color="secondary">
+                    <CartIcon />
+                </Badge> */}
+                Tenho interesse
             </Fab>
-            <Drawer anchor={'right'} open={open} onClose={() => setOpen(false)}>
+            {/* <Drawer anchor={'right'} open={open} onClose={() => setOpen(false)}>
                 {list('right')}
-            </Drawer>
+            </Drawer> */}
+            <InteresseModal open={open} onClose={() => setOpen(false)} />
         </div>
     )
 }
 
-export default CartButton
+const mapStateToProps = state => ({
+    cart: state.ProductReducers.cart
+})
+
+export default connect(mapStateToProps, null)(CartButton)

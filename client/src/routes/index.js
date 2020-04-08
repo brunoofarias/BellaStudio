@@ -43,6 +43,7 @@ class BaseRoutes extends Component {
                 
             >
                 <Route exact path="/" component={Home} />
+                <Route exact path="/:id" component={Home} />
             </AnimatedSwitch>
         )
     }
