@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Navbar from '../components/Navbar'
 import CartButton from '../components/CartButton'
 import List from '../components/List'
-import { getTypes, getVouchers } from '../actions/productActions'
+import { getTypes, getVouchers, getCart } from '../actions/productActions'
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -22,6 +22,7 @@ const Home = (props) => {
     
     props.getTypes()
     props.getVouchers()
+    props.getCart()
 
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -34,4 +35,4 @@ const Home = (props) => {
     )
 }
 
-export default connect(null, { getTypes, getVouchers })(Home)
+export default connect(null, { getTypes, getVouchers, getCart })(Home)

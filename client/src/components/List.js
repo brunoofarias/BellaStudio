@@ -8,7 +8,6 @@ import SearchIcon from '@material-ui/icons/Search'
 import Chip from '@material-ui/core/Chip'
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
 import CardActions from '@material-ui/core/CardActions'
 import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
@@ -108,7 +107,7 @@ const List = (props) => {
                 </Paper>
                 <div style={{ paddingTop: 10, paddingBottom: 10 }}>
                     {types.map(type => (
-                        <a href={`#${type.nome_tipo}`} onClick={() => handleLink(type.nome_tipo)} key={type.tipo_id} className={classes.aLink}>
+                        <a href={`#${type.nome_tipo}`} onClick={() => handleLink(type.nome_tipo)} key={`chip${type.nome_tipo}`} className={classes.aLink}>
                             <Chip variant={currentfilter === type.nome_tipo ? "default" : "outlined"} color="primary" style={{ marginLeft: 10 }} size="small" label={type.nome_tipo} />
                         </a>
                     ))}
@@ -138,7 +137,7 @@ const List = (props) => {
                     })
                     
                     return (
-                        <>
+                        <div key={`group${type.tipo_id}`}>
                             <Typography variant="h6" id={type.nome_tipo} gutterBottom key={`type${type.tipo_id}`} style={{ color: ''}}>
                                 {type.nome_tipo}
                             </Typography>
@@ -154,8 +153,10 @@ const List = (props) => {
                                                     </Typography>
                                                     <Typography variant="body2" color="textSecondary" component="p">
                                                        {product.voucher_desc}
-                                                       <p>De: <span style={{ textDecoration: 'line-through' }}>R${product.voucher_preco_antigo}</span></p>
-                                                       <p style={{ color: '#2ecc71' }}>Por: R${product.voucher_preco_novo} </p>
+                                                       <br/>
+                                                       <span>De: <span style={{ textDecoration: 'line-through' }}>R$ {parseFloat(product.voucher_preco_antigo).toFixed(2).replace(".", ",")}</span></span>
+                                                       <br/>
+                                                       <span style={{ color: '#2ecc71' }}>Por: R$ {parseFloat(product.voucher_preco_novo).toFixed(2).replace(".", ",")} </span>
                                                     </Typography>
                                                 </CardContent>
                                             </div>
@@ -163,7 +164,6 @@ const List = (props) => {
                                                 <Button 
                                                     size="small" 
                                                     color="primary"
-                                                    disabled={true}
                                                     onClick={() => handleClick({
                                                         id: product.voucher_id,
                                                         name: product.voucher_nome,
@@ -172,14 +172,14 @@ const List = (props) => {
                                                         quantity: 1
                                                     })}
                                                 >
-                                                        Em Breve
+                                                        Adicionar
                                                 </Button>
                                             </CardActions>
                                         </Card>
                                     )
                                 })}
                             </div>
-                        </>
+                        </div>
                     )
                 })}
             </div>

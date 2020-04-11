@@ -11,7 +11,10 @@ import Divider from '@material-ui/core/Divider'
 import ListItem from '@material-ui/core/ListItem'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import InteresseModal from './InteresseModal'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
+import FinalizarCompraModal from './FinalizarCompraModal'
+import { getCart, removeItem, updateInCart, clearCart } from '../actions/productActions'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,65 +26,130 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     list: {
-        width: 300
+        width: 300,
+        maxHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+    },
+    cartDetails: {
+        width: 'calc(100% - 30px)',
+        height: 'calc(15vh - 10px)',
+        minHeight: 'calc(110px - 30px)',
+        padding: 15,
+        background: '#e67e22',
+        color: '#FFF'
     }
 }))
 
 const CartButton = (props) => {
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
-    const { cart } = props
+    const [openModal, setOpenModal] = React.useState(false)
+    let { cart } = props
 
-    const list = (anchor) => (
-        <div
-            className={clsx(classes.list)}
-            role="presentation"
-            onKeyDown={() => setOpen(false)}
-        >
-            <List style={{ width: '100%' }}>
-                {cart.map((item, index) => (
-                    <>
-                        <ListItem key={item.id} style={{ width: '100%' }}>
-                            <div style={{ width: '100%' }}>   
-                                <Typography variant="h6">
-                                    {item.name}
-                                </Typography>
-                                <Typography variant="subtitle2">
-                                    {item.desc}
-                                </Typography>
-                                <br/>
-                                <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-                                    <Button size="small" style={{ marginRight: 10 }}>+</Button>
-                                    {item.quantity}
-                                    <Button size="small" style={{ marginLeft: 10 }}>-</Button>
-                                </div>
-                            </div>
-                        </ListItem>
-                        <Divider />
-                    </>
-                ))}
-            </List>
-        </div>
+    if (cart) {
+        cart = cart.sort((a, b) =>  (a.id > b.id) ? 1 : -1)
+    }
+
+    const handleRemove = item => (
+        props.removeItem(item)
     )
+
+    const handleAdd = (item) => {
+        props.updateInCart({ ...item, quantity: item.quantity + 1 })
+    }
+
+    const handleMinus = (item) => {
+        if (item.quantity - 1 == 0) {
+            return false
+        }
+        props.updateInCart({ ...item, quantity: item.quantity - 1 })
+    }
+
+    const handleClearCart = () => {
+        props.clearCart()
+    }
+
+    const list = () => {
+        let total = 0
+        
+        if (cart) {
+            return (
+                <div
+                    className={clsx(classes.list)}
+                    role="presentation"
+                    onKeyDown={() => setOpen(false)}
+                >
+                    <List style={{ width: '100%', maxHeight: '80vh', height: '80vh', overflow: 'auto' }}>
+                        {cart.map((item, index) => {
+                            total += parseFloat(item.price) * parseInt(item.quantity)
+                            
+                            return (
+                                <div key={item.id}>
+                                    <ListItem style={{ width: '100%' }}>
+                                        <div style={{ width: '85%' }}>   
+                                            <Typography variant="h6">
+                                                {item.name}
+                                            </Typography>
+                                            <Typography variant="subtitle2">
+                                                {item.desc}
+                                            </Typography>
+                                            <br/>
+                                            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
+                                                R$ {(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2).replace('.', ',')}
+                                                <div>
+                                                    <Button size="small" onClick={() => handleMinus(item)} style={{ marginLeft: 10 }}>-</Button>
+                                                        {item.quantity}
+                                                    <Button size="small" onClick={() => handleAdd(item)} style={{ marginRight: 10 }}>+</Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style={{ width: '10%' }}>
+                                            <IconButton color="danger">
+                                                <DeleteIcon onClick={() => handleRemove(item)} />
+                                            </IconButton>
+                                        </div>
+                                    </ListItem>
+                                    <Divider />
+                                </div>
+                            )
+                        })}
+                    </List>
+                    <div className={classes.cartDetails}>
+                        <b>Total:</b> R$ {total.toFixed(2).replace('.', ',')}
+                        <br/><br/>
+                        <Button onClick={() => {setOpenModal(true);setOpen(false)}} variant="contained" color="secondary" size="small">Finalizar Compra</Button>
+                        <Button onClick={() => handleClearCart()} size="small">Limpar</Button>
+                    </div>
+                </div>
+            )
+        }
+
+        return (
+            <Typography>
+                Não Há items no seu carrinho
+            </Typography>
+        )
+    }
 
     return (
         <div className={classes.root}>
-            <Fab color="primary" aria-label="add" variant="extended" onClick={() => setOpen(true)}>
-                {/* <Badge badgeContent={cart.length} color="secondary">
+            <Fab color="primary" aria-label="add" onClick={() => setOpen(true)}>
+                <Badge badgeContent={!cart ? 0 : cart.length} color="secondary">
                     <CartIcon />
-                </Badge> */}
-                Tenho interesse
+                </Badge>
             </Fab>
-            {/* <Drawer anchor={'right'} open={open} onClose={() => setOpen(false)}>
-                {list('right')}
-            </Drawer> */}
-            <InteresseModal open={open} onClose={() => setOpen(false)} />
+            <Drawer anchor={'right'} open={open} onClose={() => setOpen(false)}>
+                {list()}
+            </Drawer>
+            <FinalizarCompraModal open={openModal} onClose={() => setOpenModal(false)} />
         </div>
     )
 }
 
 const mapStateToProps = state => ({
-    cart: state.ProductReducers.cart
+    cart: state.ProductReducers.cart,
 })
 
-export default connect(mapStateToProps, null)(CartButton)
+export default connect(mapStateToProps, { getCart, removeItem, updateInCart, clearCart })(CartButton)

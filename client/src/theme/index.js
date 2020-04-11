@@ -28,8 +28,13 @@ export const theme = createMuiTheme({
         white: {
             main: '#FFF',
             contrastText: '#2f3640'
+        },
+        danger: {
+            light: '#e74c3c',
+            main: '#e74c3c',
+            dark: '#e74c3c',
+            contrastText: '#fff'
         }
-        
     }
 });
 
