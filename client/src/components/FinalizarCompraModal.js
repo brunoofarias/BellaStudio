@@ -122,7 +122,7 @@ const FinalizarCompraModal = (props) => {
             console.log(result)
             let { status, statusText, data } = result
 
-            if (status === 200 && statusText === "OK") {
+            if (status === 200) {
                 if (data.success) {
                     setVariant('warning')
                     setMessage('Aguarde, você será redirecionado para a página de pagamento.')
