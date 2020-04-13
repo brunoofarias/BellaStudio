@@ -2,7 +2,6 @@ import {
     FETCH_TYPES,
     FETCH_VOUCHER,
     ADD_TO_CART,
-    FETCH_PAYMENT,
     API_URL
 } from './typeActions'
 import axios from 'axios'

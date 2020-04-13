@@ -120,7 +120,7 @@ const FinalizarCompraModal = (props) => {
         })
         .then(result => {
             console.log(result)
-            let { status, statusText, data } = result
+            let { status, data } = result
 
             if (status === 200) {
                 if (data.success) {
@@ -192,13 +192,15 @@ const FinalizarCompraModal = (props) => {
                             </div>
                             <br/>
                             <Typography variant="caption">
-                                Ao prosseguir para o pagamento, você concorda que leu e aceita os <a href="https://vouchersbellastudio.grtech.space/docs/termos_uso_vouchers_bellastudio.pdf" target="_blank">Termos de uso</a> 
+                                Ao prosseguir para o pagamento, você concorda que leu e aceita os <a href="https://vouchersbellastudio.grtech.space/docs/termos_uso_vouchers_bellastudio.pdf" rel="noopener noreferrer" target="_blank">Termos de uso</a> 
                             </Typography>
                             <br/><br/>
                             <Typography variant="caption">
                                 * Após a compra o frete será negóciado por fora. (Frete grátis para a região da Granja Viana)
                                 <br/>
                                 ** Após prosseguir para o pagamento, o seu carrinho será apagado e não poderá ser recuperado 
+                                <br/>
+                                *** Os vouchers comprados terão válidade de 90 dias após a data da compra
                             </Typography>
                     </DialogContent>
                     <DialogActions>
@@ -206,7 +208,6 @@ const FinalizarCompraModal = (props) => {
                             Cancelar
                         </Button>
                         <Button 
-                            onClick={props.onClose}
                             color="primary"
                             autoFocus
                             disabled={ (!name || !email || !phone) ? true : false }
