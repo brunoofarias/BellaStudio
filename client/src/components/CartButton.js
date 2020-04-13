@@ -61,7 +61,7 @@ const CartButton = (props) => {
     }
 
     const handleMinus = (item) => {
-        if (item.quantity - 1 == 0) {
+        if (item.quantity - 1 === 0) {
             return false
         }
         props.updateInCart({ ...item, quantity: item.quantity - 1 })
