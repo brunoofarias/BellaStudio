@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter, Route } from 'react-router-dom'
+import { withRouter, Route, Redirect } from 'react-router-dom'
 import { AnimatedSwitch, spring } from 'react-router-transition'
 
 import { Home } from './../containers'
@@ -42,8 +42,8 @@ class BaseRoutes extends Component {
                 location={this.props.location}
                 
             >
-                <Route exact path="/" component={Home} />
                 <Route exact path="/:id" component={Home} />
+                <Redirect from='*' to='/all'/>
             </AnimatedSwitch>
         )
     }
