@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/styles'
 import Typography from '@material-ui/core/Typography'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
@@ -104,6 +105,7 @@ const FinalizarCompraModal = (props) => {
     const [openSnack, setOpenSnak] = React.useState(false)
     const [variant, setVariant] = React.useState('success')
     const [message, setMessage] = React.useState('')
+    const [loading, setLoading] = React.useState(false)
 
     const handdleChangeInput = event => {
         changeInputValue({ ...inputValue, [event.target.name]: event.target.value })
@@ -111,7 +113,8 @@ const FinalizarCompraModal = (props) => {
 
     const handlePayment = () => {
         let { name, email, phone } = inputValue
-        
+        setLoading(true)
+
         axios.post(`${API_URL}/put_compra.php`, {
             "vouchers": props.cart,
             "name": name,
@@ -130,20 +133,23 @@ const FinalizarCompraModal = (props) => {
                     
                     props.clearCart()
                     props.onClose()
-
+                    
                     setTimeout(() => {
-                        console.log('asd')
+                        setLoading(false)
                         window.open(`https://checkout.vouchers.grtech.space/?idc=${data.compra_id}&idpg=${data.preference_id}`, '_blank');
                     }, 1000)
                 } else {
                     setVariant('error')
                     setMessage('Algo deu errado, tente novamente mais tarde.')
                     setOpenSnak(true)
+                    setLoading(false)
                 }
 
+                setLoading(false)
                 return
             }
 
+            setLoading(false)
             setVariant('error')
             setMessage('Estamos com problemas, tente novamente mais tarde.')
             setOpenSnak(true)
@@ -200,7 +206,7 @@ const FinalizarCompraModal = (props) => {
                                 <br/>
                                 ** Após prosseguir para o pagamento, o seu carrinho será apagado e não poderá ser recuperado 
                                 <br/>
-                                *** Os vouchers comprados terão válidade de 90 dias após a data da compra
+                                *** Os vouchers comprados terão válidade dia 30/11/2020
                             </Typography>
                     </DialogContent>
                     <DialogActions>
@@ -213,7 +219,11 @@ const FinalizarCompraModal = (props) => {
                             disabled={ (!name || !email || !phone) ? true : false }
                             onClick={() => handlePayment()}
                         >
-                            Ir para Pagamento
+                            {loading ? (
+                                <CircularProgress />
+                            ): (
+                                <span>Ir para Pagamento</span>
+                            )}
                         </Button>
                     </DialogActions>
                 </form>
