@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
         flexWrap: 'wrap',
     },
     media: {
-        height: 200,
+        height: 300,
     },
     card: {
         width: 'calc(33% - 20px)',
@@ -74,13 +74,13 @@ const List = (props) => {
         props.addToCart(item)
     }
 
-    const renderImage = (image) => {
+    const renderImage = (image, prod_nome) => {
         if (image) {
             return (
                 <CardMedia
                     className={classes.media}
                     image={`/images/${image}`}
-                    title={image}
+                    title={prod_nome}
                 />
             )
         }
@@ -146,7 +146,7 @@ const List = (props) => {
                                     return (
                                         <Card className={classes.card} key={`product${product.voucher_id}`}>
                                             <div>
-                                                {renderImage(product.voucher_image)}
+                                                {renderImage(product.voucher_image, product.voucher_nome)}
                                                 <CardContent>
                                                     <Typography gutterBottom variant="h5" component="h2">
                                                         {product.voucher_nome}
