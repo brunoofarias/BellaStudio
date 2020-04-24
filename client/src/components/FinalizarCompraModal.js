@@ -198,15 +198,15 @@ const FinalizarCompraModal = (props) => {
                             </div>
                             <br/>
                             <Typography variant="caption">
-                                Ao prosseguir para o pagamento, você concorda que leu e aceita os <a href="https://vouchersbellastudio.grtech.space/docs/termos_uso_vouchers_bellastudio.pdf" rel="noopener noreferrer" target="_blank">Termos de uso</a> 
+                                Ao prosseguir para o pagamento, você concorda que <b>leu e aceita</b> os <a href="https://vouchersbellastudio.grtech.space/docs/termos_uso_vouchers_bellastudio.pdf" rel="noopener noreferrer" target="_blank">Termos de uso</a>
                             </Typography>
                             <br/><br/>
                             <Typography variant="caption">
-                                * Após a compra o frete será negóciado por fora. (Frete grátis para a região da Granja Viana)
+                                * Após a compra o frete será negóciado por fora. (Frete grátis para a região da Granja Viana).
                                 <br/>
-                                ** Após prosseguir para o pagamento, o seu carrinho será apagado e não poderá ser recuperado 
+                                ** Após prosseguir para o pagamento, o seu carrinho será apagado e não poderá ser recuperado.
                                 <br/>
-                                *** Os vouchers comprados terão válidade dia 30/11/2020
+                                *** Os vouchers comprados terão válidade até 30/11/2020.
                             </Typography>
                     </DialogContent>
                     <DialogActions>
